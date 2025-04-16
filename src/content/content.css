@@ -1,0 +1,26 @@
+.chinese-highlight {
+	position: relative;
+	background-color: unset;
+	border-radius: 4px;
+}
+.chinese-highlight:hover {
+	background-color: rgba(255, 255, 0, 0.3); /* Light yellow background */
+}
+.chinese-popup {
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	background: white;
+	border: 1px solid #ccc;
+	color: black;
+	padding: 8px;
+	border-radius: 4px;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	z-index: 1000;
+	white-space: nowrap;
+	display: none;
+}
+.chinese-highlight:hover .chinese-popup {
+	display: block;
+}
