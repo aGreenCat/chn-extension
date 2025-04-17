@@ -7,8 +7,9 @@ function App() {
 
   useEffect(() => {
     chrome.storage.local.get(["words"], (result) => {
-      console.log(result.words);
-      setWords(result.words);
+      const uniqueWords: string[] = Array.from(new Set(Object.values(result.words)));
+
+      setWords(uniqueWords);
     });
   }, []);
 
