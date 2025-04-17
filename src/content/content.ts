@@ -15,8 +15,10 @@ const processChineseText = async (node: Node): Promise<void> => {
 
   // Replace Chinese characters with highlighted spans
   const wrapper = document.createElement('span');
-  wrapper.innerHTML = text.replace(regex, '<span class="chinese-highlight">$1</span>');
+  wrapper.innerHTML = text.replace(regex, `<span class="chinese-highlight" id="ch-word-${highlightID}" >$1</span>`);
   node.parentNode!.replaceChild(wrapper, node); // replace node with the wrapper
+
+  highlightID++;
 }
 
 const applyFunctionality = async (): Promise<void> => {
@@ -24,37 +26,42 @@ const applyFunctionality = async (): Promise<void> => {
 
   // Apply highlighting and popup functionality
   highlights.forEach(highlight => {
-    const text : string = highlight.textContent!; // the highlighted Chinese text
+    const id : string = highlight.id;
+    const word : string = highlight.textContent!; // the highlighted Chinese word
 
     highlight.onclick = async () => {
       // get current words
-      let { words } : { words: string[] } = await chrome.storage.local.get('words');
-      if (!words) words = [];
+      let { words }: { words: { [key: string]: string } } = await chrome.storage.local.get('words'); 
+      if (!words) words = {};
 
-      if (words.includes(text)) { // remove word from list
-        await chrome.storage.local.set({ words: words.filter(word => word !== text) });
+      if (id in words) {
+        delete words[id]; // remove word from list
+        await chrome.storage.local.set({ words: words });
 
         highlight.style.backgroundColor = 'unset';
-        console.log(text + " removed.");
+        console.log(word + " removed.");
       }
-      else { // add word to list
-        await chrome.storage.local.set({ words: [ ...words, text ] });
+      else {
+        words[id] = word; // add word to list
+        await chrome.storage.local.set({ words: words });
 
         highlight.style.backgroundColor = 'yellow';
-        console.log(text + " added.");
+        console.log(word + " added.");
       }
     }
 
     const popup = document.createElement('div');
     popup.className = 'chinese-popup';
     popup.textContent = 'This is the Chinese word: ' + highlight.textContent;
-    
+
     highlight.appendChild(popup);
   });
 }
 
 // Run when DOM is fully loaded
 console.log('Chinese Extension content script loaded');
+
+let highlightID = 0;
 
 (async () => {
   await processChineseText(document.body);
