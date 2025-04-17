@@ -1,7 +1,5 @@
 import './content.css';
 
-console.log('Chinese Extension content script loaded');
-
 const processChineseText = async (node: Node): Promise<void> => {
   // If not a text node, process its children.
   if (node.nodeType !== Node.TEXT_NODE) {
@@ -39,18 +37,17 @@ const applyFunctionality = async (): Promise<void> => {
 
       if (!words) words = [];
 
-      // add or remove word from storage
-      if (words.includes(text)) {
-        chrome.storage.local.set({ words: words.filter(word => word !== text) }).then(() => {
-          highlight.style.backgroundColor = 'unset';
-          console.log(text + " removed.");
-        });
+      if (words.includes(text)) { // remove word from list
+        await chrome.storage.local.set({ words: words.filter(word => word !== text) });
+
+        highlight.style.backgroundColor = 'unset';
+        console.log(text + " removed.");
       }
-      else {
-        chrome.storage.local.set({ words: [ ...words, text ] }).then(() => {
-          highlight.style.backgroundColor = 'yellow';
-          console.log(text + " added.");
-        });
+      else { // add word to list
+        await chrome.storage.local.set({ words: [ ...words, text ] });
+
+        highlight.style.backgroundColor = 'yellow';
+        console.log(text + " added.");
       }
     }
 
@@ -62,6 +59,8 @@ const applyFunctionality = async (): Promise<void> => {
 }
 
 // Run when DOM is fully loaded
+console.log('Chinese Extension content script loaded');
+
 (async () => {
   await processChineseText(document.body);
   await applyFunctionality();
