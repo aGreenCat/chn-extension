@@ -20,7 +20,7 @@ const processChineseText = async (node: Node): Promise<void> => {
   // Replace Chinese characters with highlighted spans
   const wrapper = document.createElement('span');
   wrapper.innerHTML = text.replace(regex, '<span class="chinese-highlight">$1</span>');
-  node.parentNode?.replaceChild(wrapper, node); // TODO: look closer at this line
+  node.parentNode!.replaceChild(wrapper, node); // replace node with the wrapper
 }
 
 const applyFunctionality = async (): Promise<void> => {
