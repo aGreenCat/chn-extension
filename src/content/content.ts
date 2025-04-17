@@ -3,13 +3,9 @@ import './content.css';
 const processChineseText = async (node: Node): Promise<void> => {
   // If not a text node, process its children.
   if (node.nodeType !== Node.TEXT_NODE) {
-    node.childNodes.forEach(child => {
-      if ((child as Element).tagName !== 'SCRIPT' && (child as Element).tagName !== 'STYLE') {
+    return node.childNodes.forEach(child => {
         processChineseText(child);
-      }
     });
-
-    return;
   }
   
   const text = node.textContent || ''; // the text content of the node
@@ -33,8 +29,6 @@ const applyFunctionality = async (): Promise<void> => {
     highlight.onclick = async () => {
       // get current words
       let { words } : { words: string[] } = await chrome.storage.local.get('words');
-      console.log(words);
-
       if (!words) words = [];
 
       if (words.includes(text)) { // remove word from list
@@ -54,6 +48,7 @@ const applyFunctionality = async (): Promise<void> => {
     const popup = document.createElement('div');
     popup.className = 'chinese-popup';
     popup.textContent = 'This is the Chinese word: ' + highlight.textContent;
+    
     highlight.appendChild(popup);
   });
 }
