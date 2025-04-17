@@ -6,25 +6,22 @@ function App() {
   const [words, setWords] = useState<string[]>([]);
 
   useEffect(() => {
-    const listener = () => {
-      chrome.storage.sync.get(["words"], (result) => {
-        setWords(result.words);
-      })
-    };
-    chrome.storage.onChanged.addListener(listener);
-
-    // Clean up the listener when the component unmounts
-    return () => {
-      chrome.storage.onChanged.removeListener(listener);
-    };
+    chrome.storage.local.get(["words"], (result) => {
+      console.log(result.words);
+      setWords(result.words);
+    });
   }, []);
 
   return (
     <>
       <h1>Saved Chinese Words</h1>
-      {words.map((word, index) => (
+      
+      {words
+        ? words.map((word, index) => (
           <Card key={index} word={word} />
-      ))}
+        ))
+        : <p>No words saved.</p>
+      }
     </>
   )
 }
