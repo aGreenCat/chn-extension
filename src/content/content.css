@@ -7,7 +7,7 @@
 	background-color: rgba(255, 255, 0, 0.3); /* Light yellow background */
 }
 .chinese-popup {
-	position: absolute;
+	position: relative;
 	bottom: 100%;
 	left: 50%;
 	transform: translateX(-50%);
@@ -17,10 +17,34 @@
 	padding: 8px;
 	border-radius: 4px;
 	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-	z-index: 1000;
+	z-index: 9000;
 	white-space: nowrap;
-	display: none;
+	/* display: none; */
+	max-width: 500px;
+	min-width: 200px;
+	max-height: 500px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	text-wrap: break-word;
+	display: block;
 }
 .chinese-highlight:hover .chinese-popup {
 	display: block;
+}
+
+.close-button {
+	/* center with margin not working for button inside span, make button left right centered */
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: black;	
+	color: white;
+	border: none;
+	border-radius: 4px;
+	padding: 8px;
+	cursor: pointer;
+	transition: transform 0.2s ease-in-out;
+}
+.close-button:hover {
+	transform: scale(1.1);
 }

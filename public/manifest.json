@@ -15,5 +15,17 @@
   ],
   "permissions": [
     "storage"
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "css/*",
+        "js/*",
+        "images/*",
+        "assets/*"
+      ],
+      "matches": ["<all_urls>"],
+      "extension_ids": ["*"]
+    }
   ]
 }
